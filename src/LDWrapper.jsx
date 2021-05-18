@@ -1,18 +1,8 @@
-import React from "react";
 import { withLDProvider } from "launchdarkly-react-client-sdk";
-import Pokemon from "./Pokemon";
-
-function App() {
-  return (
-    <>
-      <Pokemon />
-    </>
-  );
-}
+import App from "./App";
 
 export default withLDProvider({
-  clientSideID: import.meta.env
-    .VITE_LD_CLIENT_KEY,
+  clientSideID: import.meta.env.LD_CLIENT_KEY,
   user: {
     key: "user_key",
     name: "User Name",
