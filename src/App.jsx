@@ -2,14 +2,12 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
   const [pokémon, setPokémon] =
     useState("pikachu");
   const [img, setImg] = useState("pikachu");
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     document.title = "Hello, " + pokémon;
@@ -17,23 +15,27 @@ function App() {
 
   useEffect(() => {
     let isCurrent = true;
-    fetch(
-      `https://pokeapi.co/api/v2/pokemon/${pokémon}/`
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        if (isCurrent) {
-          setPokémon(
-            res.name.replace(/^\w/, (c) =>
-              c.toUpperCase()
-            )
-          ); // capitalizing name
-          setImg(res.sprites.front_default);
-        }
-      })
-      .catch((error) => {
-        setError(error);
-      });
+
+    if (pokémon.length >= 4) {
+      fetch(
+        `https://pokeapi.co/api/v2/pokemon/${pokémon}/`
+      )
+        .then((res) => res.json())
+        .then((res) => {
+          if (isCurrent && isNormal(res.types)) {
+            setPokémon(
+              res.name.replace(/^\w/, (c) =>
+                c.toUpperCase()
+              )
+            ); // capitalizing name
+            setImg(res.sprites.front_default);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
     return () => {
       isCurrent = false;
     };
@@ -54,6 +56,16 @@ function App() {
       <img src={img} />
     </div>
   );
+}
+
+function isNormal(types) {
+  return types
+    .map((t) => {
+      return t.type.name;
+    })
+    .some((e) => {
+      return e === "normal";
+    });
 }
 
 export default App;
