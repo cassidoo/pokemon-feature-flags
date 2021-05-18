@@ -26,7 +26,7 @@ const Pokemon = ({ flags }) => {
         .then((res) => {
           if (
             isCurrent &&
-            isNormal(res.types, flags)
+            isAllowed(res.types, flags)
           ) {
             setPokémon(
               res.name.replace(/^\w/, (c) =>
@@ -65,15 +65,15 @@ const Pokemon = ({ flags }) => {
   );
 };
 
-function isNormal(types, flags) {
+function isAllowed(types, flags) {
   return (
-    flags.pokeflag ||
+    flags.testaroni === "all" ||
     types
       .map((t) => {
         return t.type.name;
       })
       .some((e) => {
-        return e === "normal";
+        return e === flags.testaroni;
       })
   );
 }
